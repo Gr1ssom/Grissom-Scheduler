@@ -1,52 +1,42 @@
 $(document).ready(function () {
+  var displayTime = document.querySelector("#currentDay");
+  var currentTime = dayjs().format("dddd, MMMM d, YYYY, h:mm:ss a");
 
-  $("#currentDay").text(moment().format("MMMM Do YYYY, h:mm:ss a"));
+  displayTime.textContent = currentTime;
+
   $(".saveBtn").on("click", function () {
-    console.log(this);
     var text = $(this).siblings(".description").val();
     var time = $(this).parent().attr("id");
 
-    localStorage.setItem(time,next);
-  })
+    localStorage.setItem(time,text);
+  });
 
-  $("#hour-9 .description").val(localStorage.getItem("hour-9"));
-  $("#hour-10 .description").val(localStorage.getItem("hour-10"));
-  $("#hour-11 .description").val(localStorage.getItem("hour-11"));
-  $("#hour-12 .description").val(localStorage.getItem("hour-12"));
-  $("#hour-13 .description").val(localStorage.getItem("hour-13"));
-  $("#hour-14 .description").val(localStorage.getItem("hour-14"));
-  $("#hour-15 .description").val(localStorage.getItem("hour-15"));
-  $("#hour-16 .description").val(localStorage.getItem("hour-16"));
-  $("#hour-17 .description").val(localStorage.getItem("hour-17"));
-
-  
-  
-  
-  
   function hourTracker () {
-    var currentHour = moment().hour();
+    var currentHour = dayjs().hour();
 
-    $(".time-block").each(function() {
-      var blockHour = parseInt($(this).attr("id").split("hour")[1]);
-      console.log(blockHour, currentHour)
+    $(".time-block").each(function (){
+    var blockHour= parseInt ($(this).attr("id").split("-")[1]);
 
-      if (blockHour < currentHour) {
-        $(this).addClass("past");
-        $(this).removeClass("future");
-        $(this).removeClass("present");
-      }
-      else if (blockHour === currentHour) {
-        $(this).addClass("current");
-        $(this).removeClass("future");
-        $(this).removeClass("present");
-      }
-      else {
-        $(this).addClass("future");
-        $(this).removeClass("past");
-        $(this).removeClass("present");
-      }
-    })
-  }
-    hourTracker();
+    if (blockHour < currentHour) {
+      $(this).addClass("past");
+    } else if (blockHour === currentHour) {
+      $(this).removeClass("past");
+      $(this).addClass("present");
+    } else {
+      $(this).removeClass("past");
+      $(this).removeClass("present");
+      $(this).addClass("future");
+    }
+  });
+}
+hourTracker();
 
-})
+function displayText() {
+  $(".time-block").each(function () {
+    var blockHour = $(this).attr("id");
+    $(this).children(".description").val(localStorage.getItem(blockHour));
+  });
+}
+displayText();
+
+});
